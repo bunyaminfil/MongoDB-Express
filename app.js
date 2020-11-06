@@ -23,6 +23,7 @@ mongoose
 mongoose.connect("mongodb://localhost/Mongo_Express", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true, //collection unique:true
 });
 mongoose.connection.on("open", () => {
   console.log("MongoDB : Connected...");
