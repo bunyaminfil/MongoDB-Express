@@ -4,7 +4,7 @@ const Book = require("../models/Book");
 
 router.post("/", function (req, res, next) {
   const book = new Book({
-    title: "Küçük pr",
+    title: "Küçük Prens",
     published: false,
     comments: [
       {
@@ -50,6 +50,14 @@ router.get("/searchById", (req, res) => {
     res.json(data);
   });
 });
+
+//sıralama -1, 1 a'dan z'ye , büyükten küçüğe vb.
+router.get("/sort", (req, res) => {
+  Book.find({}, (err, data) => {
+    res.json(data);
+  }).sort({ title: 1 });
+});
+
 // //Book.update ilk bulduğu kaydı günceller
 // router.put("/update", (req, res) => {
 //   Book.update({ published: false }, { published: true }, (err, data) => {
@@ -68,6 +76,7 @@ router.put("/updateall", (req, res) => {
     }
   );
 });
+
 //upsert keywordu verilen datada kayıt yoksa kendisi oluşturur
 router.put("/update", (req, res) => {
   Book.update(
@@ -89,6 +98,7 @@ router.put("/updateById", (req, res) => {
     }
   );
 });
+
 //id ye göre siler
 router.delete("/remove", (req, res) => {
   Book.findById("5fa68637d96e264236ce9163", (err, book) => {
