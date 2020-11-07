@@ -50,12 +50,12 @@ router.get("/searchById", (req, res) => {
     res.json(data);
   });
 });
-//Book.update ilk bulduğu kaydı günceller
-router.put("/update", (req, res) => {
-  Book.update({ published: false }, { published: true }, (err, data) => {
-    res.json(data);
-  });
-});
+// //Book.update ilk bulduğu kaydı günceller
+// router.put("/update", (req, res) => {
+//   Book.update({ published: false }, { published: true }, (err, data) => {
+//     res.json(data);
+//   });
+// });
 
 //birden fazla alanda güncelleme için multi keyword kullanılması gerekli
 router.put("/updateall", (req, res) => {
@@ -63,6 +63,27 @@ router.put("/updateall", (req, res) => {
     { published: false },
     { published: true },
     { multi: true },
+    (err, data) => {
+      res.json(data);
+    }
+  );
+});
+//upsert keywordu verilen datada kayıt yoksa kendisi oluşturur
+router.put("/update", (req, res) => {
+  Book.update(
+    { published: false },
+    { published: true, title: "Hayvan mezarlığı" },
+    { upsert: true },
+    (err, data) => {
+      res.json(data);
+    }
+  );
+});
+
+router.put("/updateById", (req, res) => {
+  Book.findByIdAndUpdate(
+    "5fa56063315cce912c431eab",
+    { title: "Küçük Prens", "meta.favs": 99 },
     (err, data) => {
       res.json(data);
     }
