@@ -58,6 +58,29 @@ router.get("/sort", (req, res) => {
   }).sort({ title: 1 });
 });
 
+//limit ilk 2 datayı döndürecektir
+router.get("/limit", (req, res) => {
+  Book.find({}, (err, data) => {
+    res.json(data);
+  }).limit(2);
+});
+
+//2. kayıttan sonraki kayıtları gösterir
+router.get("/skip", (req, res) => {
+  Book.find({}, (err, data) => {
+    res.json(data);
+  }).skip(2);
+});
+
+//2. kayıttan sonra 1 tane kayıt göster
+router.get("/skipAndlimit", (req, res) => {
+  Book.find({}, (err, data) => {
+    res.json(data);
+  })
+    .skip(2)
+    .limit(1);
+});
+
 // //Book.update ilk bulduğu kaydı günceller
 // router.put("/update", (req, res) => {
 //   Book.update({ published: false }, { published: true }, (err, data) => {
