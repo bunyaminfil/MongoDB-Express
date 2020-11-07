@@ -4,7 +4,7 @@ const Book = require("../models/Book");
 
 router.post("/", function (req, res, next) {
   const book = new Book({
-    title: "Küçük Prens",
+    title: "Küçük pr",
     published: false,
     comments: [
       {
@@ -88,6 +88,28 @@ router.put("/updateById", (req, res) => {
       res.json(data);
     }
   );
+});
+//id ye göre siler
+router.delete("/remove", (req, res) => {
+  Book.findById("5fa68637d96e264236ce9163", (err, book) => {
+    book.remove((err, data) => {
+      res.json(data);
+    });
+  });
+});
+
+//published:true ilk bulduğu datayı siler
+router.delete("/removefirst", (req, res) => {
+  Book.findOneAndRemove({ published: true }, (err, data) => {
+    res.json(data);
+  });
+});
+
+//published:false olan tüm kayıtları siler
+router.delete("/removeall", (req, res) => {
+  Book.remove({ published: false }, (err, data) => {
+    res.json(data);
+  });
 });
 
 module.exports = router;
