@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const Book = require("../models/Book");
+const User = require("../models/User");
 
 router.post("/", function (req, res, next) {
   const book = new Book({
@@ -31,6 +33,20 @@ router.get("/all", (req, res) => {
   Book.find({}, (err, data) => {
     res.json(data);
   });
+});
+
+router.get("/exists", (req, res) => {
+  Book.find(
+    {
+      category: {
+        $exists: false, //true sadece category olanları getirir. false olmayanları getirir
+      },
+    },
+    "title comments category",
+    (err, data) => {
+      res.json(data);
+    }
+  );
 });
 
 router.get("/search", (req, res) => {
@@ -145,6 +161,41 @@ router.get("/project", (req, res) => {
       },
       {
         $skip: 1,
+      },
+    ],
+    (err, result) => {
+      res.json(result);
+    }
+  );
+});
+
+// INNER JOIN --lookup
+router.get("/lookup", (req, res) => {
+  Book.aggregate(
+    [
+      {
+        $match: {
+          _id: mongoose.Types.ObjectId("5fa6717972f75f4cc4f85fa7"),
+          //id ye göre match edilecekse mongoosetypeobjectid kulanılmalı
+        },
+      },
+      {
+        $lookup: {
+          from: "users", //hangi tabloyla join yapılacagı
+          localField: "user_id", //Book tablondaki hangi alanı eşleştireceksin
+          foreignField: "_id",
+          as: "user",
+        },
+      },
+      {
+        $unwind: "$user",
+      },
+      {
+        $project: {
+          title: true,
+          // username: "$user.fullname", // sadece fullname gelir
+          user: "$user",
+        },
       },
     ],
     (err, result) => {
