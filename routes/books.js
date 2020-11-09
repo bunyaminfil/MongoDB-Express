@@ -81,6 +81,78 @@ router.get("/skipAndlimit", (req, res) => {
     .limit(1);
 });
 
+//aggregate -- kümeleme
+//match publish:true olanları getir
+router.get("/match", (req, res) => {
+  Book.aggregate(
+    [
+      {
+        $match: {
+          published: true,
+        },
+      },
+    ],
+    (err, result) => {
+      res.json(result);
+    }
+  );
+});
+
+//aggregate -- kümeleme
+//group --gruplama işlemi
+router.get("/group", (req, res) => {
+  Book.aggregate(
+    [
+      {
+        $match: {
+          published: true,
+        },
+      },
+      {
+        $group: {
+          _id: "$category",
+          total: { $sum: 1 }, //sum kategorinin toplam kaç adet olduğu
+        },
+      },
+    ],
+    (err, result) => {
+      res.json(result);
+    }
+  );
+});
+
+//aggregate -- kümeleme
+//project --sadece istediğin alan gelir
+router.get("/project", (req, res) => {
+  Book.aggregate(
+    [
+      {
+        $match: {
+          published: false,
+        },
+      },
+      {
+        $project: {
+          title: 1, //sadece title ve meta gelir 1 veya true kullanılır
+          meta: true,
+        },
+      },
+      {
+        $sort: { title: -1 },
+      },
+      {
+        $limit: 5,
+      },
+      {
+        $skip: 1,
+      },
+    ],
+    (err, result) => {
+      res.json(result);
+    }
+  );
+});
+
 // //Book.update ilk bulduğu kaydı günceller
 // router.put("/update", (req, res) => {
 //   Book.update({ published: false }, { published: true }, (err, data) => {

@@ -16,6 +16,9 @@ const BookSchema = new Schema({
     votes: Number,
     favs: Number,
   },
+  category: {
+    type: String,
+  },
   publishedAt: {
     type: Date,
     default: Date.now,
