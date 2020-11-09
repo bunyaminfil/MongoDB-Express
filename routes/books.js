@@ -8,6 +8,8 @@ router.post("/", function (req, res, next) {
   const book = new Book({
     title: "Küçük Prens",
     published: false,
+    year: 2000,
+    user_id: "5fa96457153233388efdf8be",
     comments: [
       {
         message: "Harika bir kitap",
@@ -23,8 +25,11 @@ router.post("/", function (req, res, next) {
   });
 
   book.save((err, data) => {
-    if (err) console.log(err);
-    res.json(data);
+    if (err) {
+      res.json(err);
+    } else {
+      res.json(data);
+    }
   });
 });
 
